@@ -1,42 +1,49 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import "./App.css";
 import Navbar from "./components/layout/Navbar";
-import Users from "./components/users/Users"
-import Search from "./components/users/Search"
+import Users from "./components/users/Users";
+import Search from "./components/users/Search";
 
-import axios from "axios"
+import axios from "axios";
 class App extends Component {
-
   state = {
     users: [],
-    loading: false
-  }
-// axios is another way to make http requests, like fetch api
-//axios automatically formats the res into json, unlike fetch
-  async componentDidMount(){
-    this.setState({loading:true});
+    loading: false,
+  };
+  // axios is another way to make http requests, like fetch api
+  //axios automatically formats the res into json, unlike fetch
+  // async componentDidMount() {
+  //   this.setState({ loading: true });
 
-    const res = await axios
-      .get(`http://api.github.com/users?client_id=$
-      {process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=$
-      {process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+  //   const res = await axios.get(`http://api.github.com/users?client_id=$
+  //     {process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=$
+  //     {process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+  //   this.setState({
+  //     users: res.data,
+  //     loading: false,
+  //   });
+  // }
+
+  searchUsers = async (text) => {
+    const res = await axios.get(`http://api.github.com/search/users?q=${text}&client_id=$
+    {process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=$
+    {process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
 
     this.setState({
-      users: res.data,
-      loading: false
-    })
-  }
-
+      users: res.data.items,
+      loading: false,
+    });
+  };
 
   render() {
     return (
       <div className="App">
         <Navbar />
         <div className="container">
-        <Search />
-        <Users loading={this.state.loading} users={this.state.users} />
+          <Search searchUsers={this.searchUsers} />
+          <Users loading={this.state.loading} users={this.state.users} />
         </div>
-        
       </div>
     );
   }
