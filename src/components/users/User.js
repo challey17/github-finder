@@ -1,9 +1,14 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useContext } from "react";
 import Spinner from "../layout/Spinner";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Repos from "../Repos/Repos";
-const User = ({ loading, user, repos, getUser, getUserRepos, match }) => {
+import GithubContext from "../../context/github/githubContext";
+
+const User = ({ repos, getUserRepos, match }) => {
+  const githubContext = useContext(GithubContext);
+  const { user, loading, getUser } = githubContext;
+
   // useEffect works like componentDidMount, if you add empty array as second paramater for useEffect, line 12
   useEffect(() => {
     getUser(match.params.login);
